@@ -1,0 +1,78 @@
+<?php declare(strict_types=1);
+namespace PN\Yaf\Http;
+
+abstract class Status
+{
+  /**
+   * @see RFC 7231 section 6 and other RFCs listed within source
+   * @see https://httpstatuses.com
+   */
+
+  public const
+    CONTINUE = 100,
+    SWITCHING_PROTOCOLS = 101,
+    PROCESSING = 102,
+
+    OK = 200,
+    CREATED = 201,
+    ACCEPTED = 202,
+    NON_AUTHORITATIVE_INFORMATION = 203,
+    NO_CONTENT = 204,
+    RESET_CONTENT = 205,
+    PARTIAL_CONTENT = 206, // RFC 7233 HTTP/1.1 Range Requests
+    MULTI_STATUS = 207, // RFC 4918 WebDAV
+    ALREADY_REPORTED = 208, // RFC 5842 Binding Extensions to WebDAV
+    IM_USED = 226, // RFC 3229 Delta encoding in HTTP
+
+    MULTIPLE_CHOICES = 300,
+    MOVED_PERMANENTLY = 301,
+    FOUND = 302,
+    SEE_OTHER = 303,
+    NOT_MODIFIED = 304, // RFC 7232 HTTP/1.1 Conditional Requests
+    USE_PROXY = 305,
+    // 306 no longer used by HTTP/1.1
+    TEMPORARY_REDIRECT = 307,
+    PERMANENT_REFIRECT = 308, // RFC 7538 HTTP Status 308 (Permanent Redirect)
+
+    BAD_REQUEST = 400,
+    UNAUTHORIZED = 401, // RFC 7235 HTTP/1.1 Authentication
+    PAYMENT_REQUIRED = 402,
+    FORBIDDEN = 403,
+    NOT_FOUND = 404,
+    METHOD_NOT_ALLOWED = 405,
+    NOT_ACCEPTABLE = 406,
+    PROXY_AUTHENTICATION_REQUIRED = 407, // RFC 7235 HTTP/1.1 Authentication
+    REQUEST_TIMEOUT = 408,
+    CONFLICT = 409,
+    GONE = 410,
+    LENGTH_REQUIRED = 411,
+    PRECONDITION_FAILED = 412, // RFC 7232 HTTP/1.1 Conditional Requests
+    PAYLOAD_TOO_LARGE = 413,
+    URI_TOO_LONG = 414,
+    UNSUPPORTED_MEDIA_TYPE = 415,
+    REQUESTED_RANGE_NOT_SATISFIABLE = 416, // RFC 7233 HTTP/1.1 Range Requests
+    EXPECTATION_FAILED = 417,
+    IM_A_TEAPOT = 418, // RFC 2324 HTCPCP/1.0
+    MISDIRECTED_REQUEST = 421, // RFC 7540 HTTP/2
+    UNPROCESSABLE_ENTITY = 422, // RFC 4918 WebDAV
+    LOCKED = 423, // RFC 4918 WebDAV
+    FAILED_DEPENDENCY = 424, // RFC 4918 WebDAV
+    UPGRADE_REQUIRED = 426,
+    PRECONDITION_REQUIRED = 428, // RFC 6585 Additional HTTP Status Codes
+    TOO_MANY_REQUESTS = 429, // RFC 6585 Additional HTTP Status Coes
+    REQUEST_HEADER_FIELDS_TOO_LARGE = 431, // RFC 6585 Additional HTTP Status Codes
+    UNAVAILABLE_FOR_LEGAL_REASONS = 451, // RFC 7725
+
+    INTERNAL_SERVER_ERROR = 500,
+    NOT_IMPLEMENTED = 501,
+    BAD_GATEWAY = 502,
+    SERVICE_UNAVAILABLE = 503,
+    GATEWAY_TIMEOUT = 504,
+    HTTP_VERSION_NOT_SUPPORTED = 505,
+    VARIANT_ALSO_NEGOTIATES = 506, // RFC 2295 Content Negotiation in HTTP
+    INSUFFICIENT_STORAGE = 507, // RFC 4918 WebDAV
+    LOOP_DETECTED = 508, // RFC 5842 Binding Extensions to WebDAV
+    NOT_EXTENDED = 510, // RFC 2774 An HTTP Extension Framework
+    NETWORK_AUTHENTICATION_REQUIRED = 511; // RFC 6585 Additional HTTP Status Codes
+
+}
