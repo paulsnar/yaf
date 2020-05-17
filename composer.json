@@ -3,8 +3,7 @@
   "description": "Yet Another Framework",
   "type": "library",
   "require": {
-    "nikic/fast-route": "^1.3",
-    "twig/twig": "^3.0"
+    "nikic/fast-route": "^1.3"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.1"
