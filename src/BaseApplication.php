@@ -4,7 +4,7 @@ use PN\Yaf\Core\{Configuration, DependencyContainer};
 use PN\Yaf\Debug\HttpExceptionResponse;
 use PN\Yaf\Events\EventDispatcher;
 use PN\Yaf\Http\{ErrorResponse, Request, Response};
-use PN\Yaf\Http\Events\ResponseSentEvent;
+use PN\Yaf\Http\Events\{ResponseEvent, ResponseSentEvent};
 use PN\Yaf\Routing\Router;
 
 abstract class BaseApplication
@@ -56,6 +56,12 @@ abstract class BaseApplication
       [$request, $response] = $router->dispatch($this->dc, $request);
     } catch (\Throwable $exc) {
       $response = $this->generateExceptionResponse($exc);
+      try {
+        $this->dc->get(EventDispatcher::class)
+            ->dispatchEvent(new ResponseEvent($response, $request));
+      } catch (\Throwable $exc) {
+        // TODO: log?
+      }
     } finally {
       $response->send();
       try {
