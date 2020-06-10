@@ -60,7 +60,7 @@ class Matcher
         $expected = array_shift($expectedPath);
         $received = array_shift($receivedPath);
 
-        if ($expected[0] === ':') {
+        if (strlen($expected) > 0 && $expected[0] === ':') {
           $name = substr($expected, 1);
           $this->pathArguments[$name] = $received;
         } else if ($expected !== $received) {
