@@ -53,7 +53,7 @@ abstract class BaseApplication
     try {
       $router = $this->dc->get(Router::class);
       $request = Request::fromGlobals();
-      [$request, $response] = $router->dispatch($this->dc, $request);
+      $response = $router->dispatch($this->dc, $request);
     } catch (\Throwable $exc) {
       $response = $this->generateExceptionResponse($exc);
       try {
