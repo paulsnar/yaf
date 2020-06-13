@@ -4,16 +4,23 @@ use function PN\Yaf\path_join;
 
 class Configuration
 {
-  private $dc;
   protected $root;
-  protected $values = [ ];
+  protected $values;
 
-  public function __construct(DependencyContainer $dc, string $root)
+  public function __construct(?string $root)
   {
-    $this->dc = $dc;
     $this->root = $root;
 
-    $this->load();
+    if ($root !== null) {
+      $this->load();
+    }
+  }
+
+  public static function fromArray(array $values): self
+  {
+    $conf = new Configuration(null);
+    $conf->values = $values;
+    return $conf;
   }
 
   protected function load(): void
