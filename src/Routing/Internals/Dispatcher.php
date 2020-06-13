@@ -68,9 +68,9 @@ class Dispatcher
       return new ConstantHandler($response);
 
     case FRDispatcher::FOUND:
-      $handler = $routes[$routeInfo[1]];
+      $route = $routes[$routeInfo[1]];
       $rq->arguments = $routeInfo[2];
-      return $handler;
+      return $route->handler;
     }
   }
 }

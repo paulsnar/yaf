@@ -12,7 +12,7 @@ class Router
     $collector = new RouteCollector();
     $routes->draw($collector);
     $routes = $collector->getRoutes();
-    $this->dispatcher = new Dispatcher($routes);
+    $this->dispatcher = new Internals\Dispatcher($routes);
   }
 
   public function dispatch(DependencyContainer $dc, Request $rq): Response

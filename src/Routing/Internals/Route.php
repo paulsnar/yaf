@@ -28,6 +28,6 @@ class Route
 
   public function id(): string
   {
-    return implode('/', $methods) . ' ' . $path;
+    return implode('/', $this->methods) . ' ' . $this->path;
   }
 }

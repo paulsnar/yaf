@@ -9,10 +9,10 @@ class ControllerHandler implements HandlerInterface
 
   public function __construct($classOrObject, string $method)
   {
-    if (is_string($class)) {
-      $this->class = $class;
+    if (is_string($classOrObject)) {
+      $this->class = $classOrObject;
     } else {
-      $this->controller = $object;
+      $this->controller = $classOrObject;
     }
 
     $this->method = $method;
