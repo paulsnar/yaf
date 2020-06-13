@@ -5,6 +5,7 @@ use function PN\Yaf\json_decode;
 class Request
 {
   public
+    $host,
     $method,
     $path,
     $headers,
@@ -28,6 +29,7 @@ class Request
 
     $rq->method = $_SERVER['REQUEST_METHOD'];
     $rq->headers = HeaderBag::fromGlobals();
+    $rq->host = $rq->headers->get('Host');
 
     $path = $_SERVER['REQUEST_URI'];
     if (($queryStart = strpos($path, '?')) !== false) {
