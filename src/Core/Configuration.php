@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 namespace PN\Yaf\Core;
-use PN\Yaf\Events\EventDispatcher;
 use function PN\Yaf\path_join;
 
 class Configuration
@@ -15,8 +14,6 @@ class Configuration
     $this->root = $root;
 
     $this->load();
-
-    $this->registerEventSubscribers();
   }
 
   protected function load(): void
@@ -27,20 +24,6 @@ class Configuration
     }
 
     $this->values = require $path;
-  }
-
-  private function registerEventSubscribers(): void
-  {
-    $subscribers = $this->get('yaf.event_subscribers');
-    if ($subscribers === null) {
-      return;
-    }
-
-    $dispatcher = $this->dc->get(EventDispatcher::class);
-    foreach ($subscribers as $subscriber) {
-      $subscriber = $this->dc->get($subscriber);
-      $dispatcher->addEventSubscriber($subscriber);
-    }
   }
 
   public function get(string $key, $default = null)

@@ -2,9 +2,8 @@
 namespace PN\Yaf;
 use PN\Yaf\Core\{Configuration, DependencyContainer};
 use PN\Yaf\Debug\HttpExceptionResponse;
-use PN\Yaf\Events\EventDispatcher;
 use PN\Yaf\Http\{ErrorResponse, Request, Response};
-use PN\Yaf\Http\Events\{ResponseEvent, ResponseSentEvent};
+use PN\Yaf\Runtime\ShutdownJobRunner;
 use PN\Yaf\Routing\Router;
 
 abstract class BaseApplication
@@ -56,19 +55,13 @@ abstract class BaseApplication
       $response = $router->dispatch($this->dc, $request);
     } catch (\Throwable $exc) {
       $response = $this->generateExceptionResponse($exc);
-      try {
-        $this->dc->get(EventDispatcher::class)
-            ->dispatchEvent(new ResponseEvent($response, $request));
-      } catch (\Throwable $exc) {
-        // TODO: log?
-      }
     } finally {
       $response->send();
+
       try {
-        $this->dc->get(EventDispatcher::class)
-            ->dispatchEvent(new ResponseSentEvent($response, $request));
+        $this->dc->get(ShutdownJobRunner::class)->run();
       } catch (\Throwable $exc) {
-        // TODO: log, since we can't actually respond with this one
+        // noop (or TODO log?)
       }
     }
   }
