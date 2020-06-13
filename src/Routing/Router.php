@@ -9,7 +9,7 @@ class Router
 
   public function __construct(RouteSet $routes)
   {
-    $collector = new Internals\RouteCollector();
+    $collector = new RouteCollector();
     $routes->draw($collector);
     $routes = $collector->getRoutes();
     $this->dispatcher = new Dispatcher($routes);

@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
-namespace PN\Yaf\Routing\Internals;
+namespace PN\Yaf\Routing;
+use PN\Yaf\Routing\Internals\CollectorConfiguration;
 
 class RouteCollector
 {
