@@ -29,7 +29,7 @@ abstract class BaseApplication
     $this->dc = new DependencyContainer();
     $this->dc->store($this);
 
-    $this->config = new Configuration($this->dc, $root);
+    $this->config = new Configuration($root);
     $this->dc->store($this->config);
   }
 
