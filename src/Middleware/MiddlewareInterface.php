@@ -4,5 +4,6 @@ use PN\Yaf\Http\{Request, Response};
 
 interface MiddlewareInterface
 {
-  public function run(Request $rq, ?Response $resp): ?Response;
+  public static function getPriority(): int;
+  public function run(array $config, Request $rq, ?Response $resp): ?Response;
 }
