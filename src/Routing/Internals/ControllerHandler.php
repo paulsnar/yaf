@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 namespace PN\Yaf\Routing\Internals;
-use PN\Yaf\Core\DependencyContainer;
+use PN\Yaf\Core\{DependencyContainer, InvocationAwareControllerInterface};
 use PN\Yaf\Http\{Request, Response};
 
 class ControllerHandler implements HandlerInterface
@@ -25,6 +25,10 @@ class ControllerHandler implements HandlerInterface
     } else {
       $controller = $dc->get($this->class);
     }
-    return $controller->{$this->method}($rq);
+    if ($controller instanceof InvocationAwareControllerInterface) {
+      return $controller->yafInvoke($this->method, $rq);
+    } else {
+      return $controller->{$this->method}($rq);
+    }
   }
 }
