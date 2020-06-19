@@ -5,7 +5,7 @@ class ParametrizedHeader
 {
   private $selfValue, $parameters = [ ];
 
-  public funciton __construct(string $header)
+  public function __construct(string $header)
   {
     $parts = explode(';', $header);
     $this->selfValue = array_shift($parts);
