@@ -34,6 +34,21 @@ namespace PN\Yaf {
     return $min;
   }
 
+  function base64url_decode(string $data): ?string {
+    $data = strtr($data, '-_', '+/');
+    $data = base64_decode($data, true);
+    if ($data === false) {
+      return null;
+    }
+    return $data;
+  }
+
+  function base64url_encode(string $data): string {
+    $data = base64_encode($data);
+    $data = strtr($data, '+/', '-_');
+    return rtrim($data, '=');
+  }
+
   function path_join(string ...$parts): string {
     return implode(DIRECTORY_SEPARATOR, $parts);
   }
