@@ -75,6 +75,11 @@ class Configuration
     return $this->get('environment', Environment::PRODUCTION);
   }
 
+  public function getRoot(): string
+  {
+    return $this->root;
+  }
+
   public function isDebug(): bool
   {
     return $this->getEnvironment() === Environment::DEV;
