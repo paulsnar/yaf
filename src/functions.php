@@ -117,7 +117,7 @@ namespace PN\Yaf {
       $flags |= constant('\\JSON_THROW_ON_ERROR');
     }
     $value = \json_decode($json, true, $flags);
-    if ($value === null && json_last_error() !== JSON_ERROR_NONDE) {
+    if ($value === null && json_last_error() !== JSON_ERROR_NONE) {
       throw new \RuntimeException(json_last_error_msg());
     }
     return $value;
