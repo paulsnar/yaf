@@ -7,11 +7,11 @@ set_error_handler(function ($severity, $message, $file, $line) {
   throw new \ErrorException($message, 0, $severity, $file, $line);
 });
 
-try {
+if (is_file(dirname(__DIR__) . '/vendor/autoload.php')) {
+  require dirname(__DIR__) . '/vendor/autoload.php';
+} else {
   // assumes installed in vendor/bin
   require dirname(dirname(dirname(__DIR__))) . '/autoload.php';
-} catch (\ErrorException $exc) {
-  require dirname(__DIR__) . '/vendor/autoload.php';
 }
 
 $stdin = fopen('php://stdin', 'r');
