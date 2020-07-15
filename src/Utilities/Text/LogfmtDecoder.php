@@ -52,13 +52,14 @@ class LogfmtDecoder
   {
     $values = [ ];
     while ( ! $this->input->isAtEnd()) {
+      while ($this->input->peek(0) === ' ') {
+        $this->input->move(1);
+      }
+
       $key = $this->decodeValueUntilBoundary(true);
       $this->input->consume('=');
       $value = $this->decodeValueUntilBoundary(false);
       $values[$key] = $value;
-      if ( ! $this->input->isAtEnd()) {
-        $this->input->consume(' ');
-      }
     }
     return $values;
   }

@@ -66,7 +66,7 @@ namespace PN\Yaf {
           '\\' => '\\\\',
           "\n" => '\\n',
         ]);
-        $value = '"{$value}"';
+        $value = '"' . $value . '"';
       }
       $pairs[] = "{$key}={$value}";
     }
