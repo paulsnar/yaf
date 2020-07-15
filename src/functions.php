@@ -34,6 +34,49 @@ namespace PN\Yaf {
     return $min;
   }
 
+  function str_slice(string $string, int $start, ?int $end = null): string {
+    if ($start < 0) {
+      $start += strlen($string);
+    }
+    if ($start < 0) {
+      return '';
+    }
+
+    if ($end === null) {
+      $end = strlen($string);
+    } else if ($end < 0) {
+      $end += strlen($string);
+    }
+
+    $len = $end - $start;
+    if ($len < 0) {
+      return '';
+    }
+
+    return substr($string, $start, $len);
+  }
+
+  function logfmt_encode(array $line): string {
+    $pairs = [ ];
+    foreach ($line as $key => $value) {
+      $value = (string) $value;
+      if (str_maskpos($value, " \"\n") !== null) {
+        $value = strtr($value, [
+          '"' => '\\"',
+          '\\' => '\\\\',
+          "\n" => '\\n',
+        ]);
+        $value = '"{$value}"';
+      }
+      $pairs[] = "{$key}={$value}";
+    }
+    return implode(' ', $pairs);
+  }
+
+  function logfmt_decode(string $line): array {
+    return (new Utilities\Text\LogfmtDecoder($line))->decode();
+  }
+
   function base64url_decode(string $data): ?string {
     $data = strtr($data, '-_', '+/');
     $data = base64_decode($data, true);

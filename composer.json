@@ -2,6 +2,7 @@
   "name": "paulsnar/yaf",
   "description": "Yet Another Framework",
   "type": "library",
+  "bin": ["bin/logfmt-prettyprinter"],
   "require": {
     "nikic/fast-route": "^1.3"
   },

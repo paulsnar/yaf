@@ -1,0 +1,135 @@
+#!/usr/bin/php
+<?php declare(strict_types=1);
+namespace PN\Yaf;
+use PN\Yaf\Utilities\Text\Highlighter;
+
+set_error_handler(function ($severity, $message, $file, $line) {
+  throw new \ErrorException($message, 0, $severity, $file, $line);
+});
+
+try {
+  // assumes installed in vendor/bin
+  require dirname(dirname(dirname(__DIR__))) . '/autoload.php';
+} catch (\ErrorException $exc) {
+  require dirname(__DIR__) . '/vendor/autoload.php';
+}
+
+$stdin = fopen('php://stdin', 'r');
+$stdout = fopen('php://stdout', 'w');
+
+for (;;) {
+  $line = fgets($stdin);
+  if ($line === false) {
+    break;
+  }
+  try {
+    $line = logfmt_decode(rtrim($line, "\n"));
+  } catch (\Throwable $exc) {
+    fwrite($stdout, "(logfmt-prettyprinter) " .
+      get_class($exc) . ": " . $exc->getMessage() . "\nat " .
+      $exc->getFile() . ":" . $exc->getLine() . "\n" .
+      $exc->getTraceAsString() . "\n");
+    fwrite($stdout, $line);
+    continue;
+  }
+
+  $outline = '';
+  $event = ($line['event'] ?? '<no event>') . ' ';
+  switch ($line['level']) {
+    case 'ERROR':
+      $outline .= Highlighter::wrapColor('[X] ',
+        [ 'bold' => true, 'reset' => false,
+          'foreground' => ['red', 'bright' => true] ]);
+      $outline .= Highlighter::wrapColor($event,
+        [ 'foreground' => 'red', 'reset' => false ]);
+      break;
+    case 'WARNING':
+      $outline .= Highlighter::wrapColor('[!] ',
+        [ 'bold' => true, 'reset' => false,
+          'foreground' => ['yellow', 'bright' => true] ]);
+      $outline .= Highlighter::wrapColor($event,
+        [ 'foreground' => 'yellow', 'reset' => false ]);
+      break;
+    case 'INFO':
+      $outline .= Highlighter::wrapColor('[i] ',
+        [ 'bold' => true, 'reset' => false,
+          'foreground' => ['cyan', 'bright' => true] ]);
+      $outline .= Highlighter::wrapColor($event,
+        [ 'foreground' => 'cyan', 'reset' => false ]);
+      break;
+    case 'DEBUG':
+      $outline .= Highlighter::wrapColor('[#] ',
+        [ 'bold' => true, 'reset' => false, 'foreground' => 'magenta' ]);
+      $outline .= Highlighter::wrapColor($event,
+        [ 'foreground' => ['black', 'bright' => true], 'reset' => false ]);
+      break;
+    case 'VERBOSE':
+      $outline .= Highlighter::wrapColor('[$] ',
+        [ 'foreground' => 'white', 'reset' => false  ]);
+      $outline .= Highlighter::wrapColor($event,
+        [ 'bold' => true, 'foreground' => 'black', 'reset' => false ]);
+      break;
+    default:
+      $outline .= Highlighter::wrapColor('[?] ',
+        [ 'foreground' => 'magenta', 'bold' => true, 'reset' => false ]);
+      $outline .= $event;
+      break;
+  }
+
+  $outline .= Highlighter::wrapColor("{$line['timestamp']} ",
+    [ 'foreground' => ['blue', 'bright' => true] ]);
+
+  unset($line['level'], $line['timestamp']);
+  if (array_key_exists('event', $line)) {
+    unset($line['event']);
+  }
+
+  $trace = $line['trace'] ?? null;
+  if ($trace !== null) {
+    unset($line['trace']);
+  }
+
+  if (array_key_exists('exception', $line) &&
+      array_key_exists('message', $line) &&
+      array_key_exists('file', $line) &&
+      array_key_exists('line', $line)) {
+    $exception = ['exception' => $line['exception'],
+      'message' => $line['message'], 'file' => $line['file'],
+      'line' => $line['line']];
+    unset($line['exception'], $line['message'], $line['file'], $line['line']);
+  } else {
+    $exception = null;
+  }
+
+  $keyValuePairs = [ ];
+  foreach ($line as $key => $value) {
+    if (str_maskpos($value, ' "')) {
+      $value = '"' . $value . '"';
+    }
+    $keyValuePairs[] =
+      Highlighter::wrapColor($key,
+        [ 'foreground' => ['white', 'bright' => true], 'reset' => false ]) .
+      Highlighter::wrapColor('=', ['foreground' => 'white']) .
+      $value;
+  }
+  $outline .= implode(' ', $keyValuePairs);
+
+  if ($exception !== null) {
+    $class = $exception['exception'];
+    $message = Highlighter::wrapColor($exception['message'],
+      [ 'foreground' => ['white', 'bright' => true], 'bold' => true ]);
+    $fileLine = Highlighter::wrapColor(
+      sprintf(' at %s:%s', $exception['file'], $exception['line']),
+      [ 'foreground' => ['black', 'bright' => true] ]);
+    $outline .= "\n    {$class}: {$message}{$fileLine}";
+  }
+  if ($trace !== null) {
+    $trace = implode("\n", array_map(function ($line) {
+      return '    ' . $line;
+    }, explode("\n", $trace)));
+    $outline .= "\n" . Highlighter::wrapColor($trace,
+      [ 'foreground' => 'white' ]);
+  }
+  $outline .= "\n";
+  fwrite($stdout, $outline);
+}
