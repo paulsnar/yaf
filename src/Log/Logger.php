@@ -35,7 +35,7 @@ abstract class Logger
 
     $ts = date('Y-m-d H:i:s O');
     if (str_slice($ts, -4) === '0000') {
-      $ts = str_slice($ts, 0, -5) . 'Z';
+      $ts = str_slice($ts, 0, -6) . 'Z';
     }
 
     $context['timestamp'] = $ts;

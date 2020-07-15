@@ -38,11 +38,11 @@ class LogfmtDecoder
       while ( ! $i->isAtEnd()) {
         $char = $i->take(1);
         if ($char === $boundary) {
+          $i->move(-1);
           break;
         }
         $value .= $char;
       }
-      $i->move(-1);
     }
 
     return $value;
