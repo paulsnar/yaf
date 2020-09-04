@@ -45,7 +45,15 @@ class Session implements \ArrayAccess
     unset($_SESSION[$key]);
   }
 
-  public function clear(): Cookie
+  public function clear(): void
+  {
+    self::start();
+    foreach (array_keys($_SESSION) as $key) {
+      unset($_SESSION[$key]):
+    }
+  }
+
+  public function destroy(): Cookie
   {
     self::start();
     session_destroy();
