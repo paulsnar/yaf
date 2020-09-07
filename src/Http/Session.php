@@ -27,7 +27,7 @@ class Session implements \ArrayAccess
     return array_key_exists($name, $_SESSION);
   }
 
-  public function get(string $key, ?string $default = null)
+  public function get(string $key, $default = null)
   {
     self::start();
     return $_SESSION[$key] ?? $default;
@@ -49,7 +49,7 @@ class Session implements \ArrayAccess
   {
     self::start();
     foreach (array_keys($_SESSION) as $key) {
-      unset($_SESSION[$key]):
+      unset($_SESSION[$key]);
     }
   }
 
