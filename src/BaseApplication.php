@@ -47,6 +47,11 @@ abstract class BaseApplication
     return ErrorResponse::internalServerError();
   }
 
+  protected function handleUncaughtException(\Throwable $exc): void
+  {
+    // override...
+  }
+
   public function run()
   {
     try {
@@ -54,6 +59,7 @@ abstract class BaseApplication
       $request = Request::fromGlobals();
       $response = $router->dispatch($this->dc, $request);
     } catch (\Throwable $exc) {
+      $this->handleUncaughtException($exc);
       $response = $this->generateExceptionResponse($exc);
     } finally {
       $response->send();
@@ -61,6 +67,7 @@ abstract class BaseApplication
       try {
         $this->dc->get(ShutdownJobRunner::class)->run();
       } catch (\Throwable $exc) {
+        $this->handleUncaughtException($exc);
         // noop (or TODO log?)
       }
     }
