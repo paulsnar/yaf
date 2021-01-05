@@ -45,11 +45,11 @@ class Cookie
       $extra[] = 'Domain=' . $this->domain;
     }
 
-    if ($this->path !== null && ! $this->isHostScoped) {
+    if ($this->path !== null) {
       $extra[] = 'Path=' . $this->path;
     }
 
-    if ($this->isSecure || $this->isHostScoped) {
+    if ($this->isSecure) {
       $extra[] = 'Secure';
     }
 
