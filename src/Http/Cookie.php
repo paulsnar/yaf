@@ -13,7 +13,7 @@ class Cookie
     $maxAge,
     $domain,
     $path,
-    $isHostScoped,
+    $sameSite,
     $isSecure,
     $isHttpOnly;
 
@@ -32,13 +32,7 @@ class Cookie
 
   public function send(): void
   {
-    $name = $this->name;
-    if ($this->isHostScoped) {
-      $name = "__Host-{$name}";
-    } else if ($this->isSecure) {
-      $name = "__Secure-{$name}";
-    }
-    $line = "{$name}={$this->value}";
+    $line = "{$this->name}={$this->value}";
     $extra = [ ];
 
     if ($this->maxAge !== null) {
@@ -57,6 +51,10 @@ class Cookie
 
     if ($this->isSecure || $this->isHostScoped) {
       $extra[] = 'Secure';
+    }
+
+    if ($this->sameSite !== null) {
+      $extra[] = 'SameSite=' . $this->sameSite;
     }
 
     if ($this->isHttpOnly) {
